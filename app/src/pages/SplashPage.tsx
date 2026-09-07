@@ -1,25 +1,85 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ActionButton } from '../components/ActionButton'
-import { Wordmark } from '../components/Wordmark'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { Screen } from '../components/layout/Screen'
+import { Button } from '../components/ui/Button'
+import { Wordmark } from '../components/ui/Wordmark'
+import { useSessionFlag } from '../hooks/useSessionFlag'
+import { ROUTES } from '../wizard/steps'
+
+/** Animated mesh-gradient backdrop with the mountain silhouette. */
+function SplashBackdrop() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden bg-black">
+      {/* Mesh gradient: warm on the left, cool on the right, black by the bottom. */}
+      <div className="absolute -top-[16%] -left-[30%] size-[80%] rounded-full bg-[#ff3b30] blur-[80px]" />
+      <div className="absolute -top-[6%] -left-[12%] size-[62%] rounded-full bg-[#ff9142] blur-[80px]" />
+      <div className="absolute -top-[16%] -right-[26%] size-[86%] rounded-full bg-[#1d7fff] blur-[80px]" />
+      <div className="absolute top-[8%] -right-[22%] size-[62%] rounded-full bg-[#0fdcd6] blur-[80px]" />
+      <div className="absolute top-[20%] -left-[10%] size-[52%] rounded-full bg-[#ff2f6e] opacity-80 blur-[90px]" />
+      <div className="absolute top-[30%] left-[34%] size-[42%] rounded-full bg-[#1fc98b] opacity-45 blur-[100px]" />
+
+      {/* Mountain silhouette across the lower third: a soft, rounded ridge. */}
+      <svg
+        viewBox="0 0 100 34"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 top-[34%] h-[40%] w-full blur-[7px]"
+      >
+        <defs>
+          <linearGradient id="ridge" x1="0.3" y1="0" x2="0.7" y2="1">
+            <stop offset="0%" stopColor="#3a2f52" stopOpacity="0.95" />
+            <stop offset="45%" stopColor="#14101f" />
+            <stop offset="100%" stopColor="#000000" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M-8 34 C 10 33.2 24 29.5 35 21 C 41 16.5 45 10 50 8 C 55 10 60 17 66 21.5 C 78 30 92 33.4 108 34 Z"
+          fill="url(#ridge)"
+        />
+      </svg>
+
+      <div className="absolute inset-x-0 bottom-0 h-[52%] bg-gradient-to-b from-transparent via-black/80 to-black" />
+    </div>
+  )
+}
 
 export function SplashPage() {
   const navigate = useNavigate()
+  const [hasSeenSplash, markSplashSeen] = useSessionFlag('hasSeenSplash')
+  const [hasAcceptedTerms] = useSessionFlag('hasAcceptedTerms')
 
-  useEffect(() => {
-    if (sessionStorage.getItem('hasSeenSplash') === 'true') {
-      navigate(sessionStorage.getItem('hasAcceptedTerms') === 'true' ? '/feed' : '/terms', { replace: true })
-    }
-  }, [navigate])
+  if (hasSeenSplash) {
+    return <Navigate to={hasAcceptedTerms ? ROUTES.feed : ROUTES.terms} replace />
+  }
 
-  return <main className="relative isolate h-[100svh] overflow-hidden bg-[linear-gradient(132deg,#fe4d45_0%,#ff9142_30%,#3b82f6_72%,#2dd4bf_100%)]">
-    <div className="absolute -left-[16%] -top-[22%] h-[72vw] w-[72vw] max-h-[720px] max-w-[720px] animate-[drift_12s_ease-in-out_infinite_alternate] rounded-full border border-white/20" />
-    <div className="absolute -bottom-[12%] -right-[40%] h-[72vw] w-[72vw] max-h-[720px] max-w-[720px] animate-[drift_12s_ease-in-out_infinite_alternate] rounded-full border border-white/20 [animation-delay:-4s]" />
-    <div className="absolute -bottom-px -left-[5%] z-[-1] h-[37%] w-[110%] bg-[#090909] [clip-path:polygon(0_75%,12%_57%,19%_68%,33%_30%,43%_58%,55%_42%,65%_65%,80%_23%,91%_55%,100%_38%,100%_100%,0_100%)]" aria-hidden="true" />
-    <div className="relative z-[2] mx-auto flex h-[100svh] w-[calc(100%-48px)] max-w-[480px] flex-col justify-between py-12">
-      <Wordmark />
-      <div className="m-auto mb-[54px] text-center"><p className="mb-3 text-[17px] font-bold leading-tight text-white">AN APP ONLY FOR</p><h1 className="m-0 text-[clamp(38px,11vw,52px)] font-bold leading-[1.12] tracking-[.01em] text-white">EXTROVERTS</h1><p className="mx-auto mt-[42px] max-w-[340px] text-[14px] leading-[1.4] text-white/[.88]"><strong className="font-normal text-[#ff8276]">Warning:</strong> Entering may lead to spontaneous dancing and unsolicited high-fives!</p></div>
-      <ActionButton onClick={() => { sessionStorage.setItem('hasSeenSplash', 'true'); navigate('/terms') }}>Continue</ActionButton>
-    </div>
-  </main>
+  return (
+    <Screen padded={false} className="overflow-hidden">
+      <SplashBackdrop />
+
+      <div className="relative flex flex-1 flex-col px-6 pt-12 pb-[12svh] sm:px-8">
+        <div className="flex flex-1 items-center justify-center pb-[8svh]">
+          <Wordmark size="lg" />
+        </div>
+
+        <div className="grid gap-3 text-center">
+          <p className="text-[17px] font-bold tracking-[0.01em] uppercase">An app only for</p>
+          <h1 className="text-[clamp(34px,10vw,44px)] font-bold tracking-[0.01em] uppercase md:text-5xl">
+            Extroverts
+          </h1>
+          <p className="mx-auto mt-6 max-w-[22rem] text-[15px] leading-[1.45] text-white/95">
+            <span className="text-[#ff7a6b]">Warning:</span> Entering may lead to spontaneous dancing
+            and unsolicited high-fives!
+          </p>
+        </div>
+
+        <Button
+          className="mt-7"
+          onClick={() => {
+            markSplashSeen()
+            navigate(ROUTES.terms)
+          }}
+        >
+          Continue
+        </Button>
+      </div>
+    </Screen>
+  )
 }

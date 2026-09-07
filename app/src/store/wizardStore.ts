@@ -1,10 +1,13 @@
 import { create } from 'zustand'
+import { STEP, type StepIndex } from '../wizard/steps'
 
-export type WizardData = {
+/** Values collected across the wizard. Only validated data is committed here. */
+export type WizardValues = {
   email: string
   newsletterOptIn: boolean
   username: string
   displayName: string
+  /** DD/MM/YYYY, set only through the date-of-birth picker. */
   dateOfBirth: string
   age: number | null
   pronouns: string[]
@@ -12,30 +15,48 @@ export type WizardData = {
   inviteCode: string
 }
 
-type WizardState = WizardData & {
-  furthestStepReached: number
-  otpVerified: boolean
-  signupSucceeded: boolean
-  setEmail: (email: string, newsletterOptIn: boolean) => void
-  setStepData: <K extends keyof WizardData>(key: K, value: WizardData[K]) => void
-  markStepReached: (step: number) => void
-  setOtpVerified: () => void
-  setSignupSucceeded: () => void
+type WizardState = {
+  values: WizardValues
+  /** Highest step the user is allowed to open; drives <StepGuard>. */
+  furthestStep: StepIndex
+  isAuthenticated: boolean
+  /** Commits a step's validated values and unlocks the next step. */
+  completeStep: (step: StepIndex, values?: Partial<WizardValues>) => void
+  /** Stores values without changing progress (e.g. a field edited in place). */
+  setValues: (values: Partial<WizardValues>) => void
+  finishSignup: () => void
+  reset: () => void
 }
 
-const initialData: WizardData = {
-  email: '', newsletterOptIn: false, username: '', displayName: '', dateOfBirth: '', age: null,
-  pronouns: [], customPronoun: '', inviteCode: '',
+const emptyValues: WizardValues = {
+  email: '',
+  newsletterOptIn: false,
+  username: '',
+  displayName: '',
+  dateOfBirth: '',
+  age: null,
+  pronouns: [],
+  customPronoun: '',
+  inviteCode: '',
 }
 
 export const useWizardStore = create<WizardState>((set) => ({
-  ...initialData,
-  furthestStepReached: 0,
-  otpVerified: false,
-  signupSucceeded: false,
-  setEmail: (email, newsletterOptIn) => set({ email, newsletterOptIn }),
-  setStepData: (key, value) => set({ [key]: value }),
-  markStepReached: (step) => set((state) => ({ furthestStepReached: Math.max(state.furthestStepReached, step) })),
-  setOtpVerified: () => set({ otpVerified: true, furthestStepReached: 2 }),
-  setSignupSucceeded: () => set({ signupSucceeded: true }),
+  values: emptyValues,
+  furthestStep: STEP.email,
+  isAuthenticated: false,
+  completeStep: (step, values) =>
+    set((state) => ({
+      values: values ? { ...state.values, ...values } : state.values,
+      furthestStep: Math.max(state.furthestStep, step + 1) as StepIndex,
+    })),
+  setValues: (values) => set((state) => ({ values: { ...state.values, ...values } })),
+  finishSignup: () =>
+    set((state) => ({
+      isAuthenticated: true,
+      furthestStep: Math.max(state.furthestStep, STEP.success) as StepIndex,
+    })),
+  reset: () => set({ values: emptyValues, furthestStep: STEP.email, isAuthenticated: false }),
 }))
+
+/** Selector helpers keep components from re-rendering on unrelated state. */
+export const useWizardValues = () => useWizardStore((state) => state.values)
