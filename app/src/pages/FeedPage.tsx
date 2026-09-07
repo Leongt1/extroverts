@@ -1,19 +1,50 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ActionButton } from '../components/ActionButton'
-import { BottomSheet } from '../components/BottomSheet'
-import { Wordmark } from '../components/Wordmark'
+import { AccountGateSheet } from '../components/feed/AccountGateSheet'
+import { BottomNav } from '../components/feed/BottomNav'
+import { ClubCard } from '../components/feed/ClubCard'
+import { EventCard } from '../components/feed/EventCard'
+import { FeedHeader } from '../components/feed/FeedHeader'
+import { SAMPLE_EVENT } from '../lib/feedContent'
+import { Screen } from '../components/layout/Screen'
+import { useWizardStore } from '../store/wizardStore'
+import { ROUTES } from '../wizard/steps'
 
+/**
+ * Teaser feed — a static visual placeholder in both states.
+ * Pre-auth the only live control is JOIN, which opens the account gate;
+ * post-auth the same layout shows the real starting state of a new account.
+ */
 export function FeedPage() {
-  const [isGateOpen, setIsGateOpen] = useState(false)
   const navigate = useNavigate()
+  const isAuthenticated = useWizardStore((state) => state.isAuthenticated)
+  const [isGateOpen, setIsGateOpen] = useState(false)
 
-  return <main className="h-[100svh] overflow-hidden bg-app-base"><div className="relative z-[1] mx-auto flex h-[100svh] w-[calc(100%-48px)] max-w-[480px] flex-col gap-2 py-8">
-    <header className="flex items-center justify-between"><Wordmark /><span className="text-[25px] text-app-text">[ ] * ☆</span></header>
-    <div className="mt-5 text-[13px] text-app-text">YOUR CLUB</div><div className="flex items-center justify-between rounded-t-[10px] border border-app-text px-5 py-[15px] text-[15px] text-app-text"><strong>Bronze Club Member</strong><span>⬡</span></div><div className="h-[3px] bg-app-border"><span className="block h-full w-[64%] bg-app-accent" /></div><p className="my-1 mb-3 text-[13px] font-semibold text-app-text">🟡 YOU HAVE 0 HONORARY VIBE TOKENS!</p>
-    <section className="overflow-hidden rounded-[10px] bg-black p-6"><div className="flex min-h-[185px] items-start rounded-xl bg-[linear-gradient(135deg,#ce7c5f,#e3d9bd_42%,#eb4e73)] p-3.5 text-[#a33a32]"><span className="text-[16px] font-bold italic">THE ROYAL FITNESS CLUB</span></div><div className="grid gap-[15px] pt-6"><div><h1 className="m-0 text-[30px] font-bold leading-[1.12] tracking-[-.055em] text-app-text">Hi</h1><p className="mt-1 text-[14px] text-app-text">PRIVATE PARTY</p><p className="mt-5 flex items-center justify-between text-[16px] font-semibold text-app-text">@rahulxkumar <b className="rounded-full bg-[#dba900] px-4 py-2 text-[13px] text-white">Coffee Break</b></p><div className="mt-5 grid grid-cols-2 overflow-hidden rounded-[10px] border border-[#444] text-[13px] text-app-text"><span className="border-b border-[#444] p-3.5">2:41 PM -</span><span className="border-b border-l border-[#444] p-3.5">03/10/26 -</span><p className="col-span-full m-0 p-3.5 leading-[1.45]">K2 Resto Lounge (Dine Out Cafe And Restaurant Bhopal), Kahjuri Sadak, Kol...</p></div></div><ActionButton onClick={() => setIsGateOpen(true)}>Join</ActionButton></div></section>
-    <nav className="mt-auto flex justify-around pt-6 text-[12px] text-app-muted" aria-label="Decorative navigation"><span>Home</span><span>Discover</span><span>Profile</span></nav>
-  </div>
-  {isGateOpen && <BottomSheet title="You need an account" onClose={() => setIsGateOpen(false)}><p className="text-[15px] leading-[1.7] text-app-muted">Join the room, save your spots, and keep the good nights coming.</p><ActionButton onClick={() => navigate('/signup/email')}>Get started</ActionButton><ActionButton variant="secondary" onClick={() => setIsGateOpen(false)}>Maybe later</ActionButton></BottomSheet>}
-  </main>
+  return (
+    <Screen tone="surface" padded={false}>
+      <div className="flex flex-1 flex-col gap-4 px-4 pt-8 pb-8">
+        <FeedHeader unreadCount={isAuthenticated ? 3 : 0} />
+
+        <ClubCard
+          tier={isAuthenticated ? 'bronze' : 'silver'}
+          progress={isAuthenticated ? 0 : 0.68}
+          tokens={isAuthenticated ? 0 : 160}
+        />
+
+        <EventCard
+          event={SAMPLE_EVENT}
+          isAuthenticated={isAuthenticated}
+          onJoin={() => !isAuthenticated && setIsGateOpen(true)}
+        />
+
+        {isAuthenticated && <BottomNav />}
+      </div>
+
+      <AccountGateSheet
+        open={isGateOpen}
+        onClose={() => setIsGateOpen(false)}
+        onGetStarted={() => navigate(ROUTES.email)}
+      />
+    </Screen>
+  )
 }

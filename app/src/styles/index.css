@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+@import 'tailwindcss';
+
+/*
+ * Design tokens.
+ * Colours were sampled from the reference screenshots in /ui_flow_images
+ * (see docs/design_doc.md for the written spec).
+ */
+@theme {
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', 'Times New Roman', serif;
+
+  --color-ink: #000000;            /* page background */
+  --color-surface: #151515;        /* bottom sheets + feed background */
+  --color-card: #000000;           /* cards sitting on the feed surface */
+  --color-line: #4a4a4a;           /* input outlines */
+  --color-line-soft: #333333;      /* OTP underlines, hairlines */
+  --color-line-strong: #8f8f8f;    /* focused outlines */
+  --color-fg: #ffffff;
+  --color-muted: #8f8f8f;          /* de-emphasised copy: resend link, captions */
+  --color-placeholder: #5c5c5c;
+  --color-quiet: #b2b2b2;          /* disabled label on a white button */
+  --color-accent: #a855f7;
+  --color-warning: #eab308;
+  --color-danger: #ef4444;
+  --color-gold: #c9991d;
+  --color-gold-dim: #8b6a3d;
+
+  --radius-field: 12px;
+  --radius-control: 14px;
+  --radius-sheet: 24px;
+
+  --animate-step-in: step-in 240ms ease-out both;
+  --animate-step-back: step-back 240ms ease-out both;
+  --animate-sheet-in: sheet-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 200ms ease-out both;
+  --animate-shake: shake 400ms ease-in-out both;
+  --animate-pop-in: pop-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes step-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+@keyframes step-back { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+@keyframes sheet-in { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  30%, 70% { transform: translateX(4px); }
+  50% { transform: translateX(-4px); }
+}
+@keyframes pop-in { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: none; } }
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root { min-height: 100svh; }
+
+  button, input { font: inherit; color: inherit; }
+
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
