@@ -1,4 +1,4 @@
-Follow the system CLAUDE.md practices minus the github workflow as we don't need it for this.
+Follow the standard system practices, minus the github workflow as we don't need it for this.
 
 Here are important requirements:
 1. Follow the infor in the docs folder:

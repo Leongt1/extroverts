@@ -1,6 +1,6 @@
 # Master Prompt — Signup Wizard Replication (Frontend Assessment)
 
-> Paste this as the first message to your AI coding assistant (Claude Code / Cursor).
+> Paste this as the first message to your AI coding assistant.
 > All screens have now been captured from the reference app ("E" / party-social app,
 > internal name unknown) — this version has concrete details for every step.
 
