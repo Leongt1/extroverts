@@ -13,7 +13,7 @@ export function SuccessPage() {
   const { username, displayName } = useWizardStore((state) => state.values)
 
   return (
-    <Screen>
+    <Screen desktop="split">
       <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
         <span className="animate-pop-in grid size-20 place-items-center rounded-full bg-accent text-white">
           <CheckIcon width={38} height={38} />
@@ -22,7 +22,7 @@ export function SuccessPage() {
           You&apos;re in!
         </h1>
         <p className="max-w-[24rem] text-[16px] leading-[1.6] text-fg/85">
-          Welcome, {displayName || username}. Your account is ready — the room is waiting, go make a
+          Welcome, {displayName || username}. Your account is ready. The room is waiting, go make a
           little noise.
         </p>
       </div>
