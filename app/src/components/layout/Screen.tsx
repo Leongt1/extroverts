@@ -16,6 +16,13 @@ type ScreenProps = {
    * - `bleed` full-bleed; the screen paints its own background edge-to-edge (splash).
    */
   desktop?: 'card' | 'split' | 'bleed'
+  /**
+   * Vertical placement of the form column in the `split` layout on desktop.
+   * `center` suits short content (forms); `top` suits tall, scrolling content
+   * (the feed), which then scrolls inside its own column while the brand panel
+   * stays put. Ignored for other `desktop` variants.
+   */
+  splitAlign?: 'center' | 'top'
   className?: string
 }
 
@@ -25,7 +32,14 @@ const PADDING = 'px-6 pt-12 pb-8 sm:px-8'
  * Responsive shell shared by every screen.
  * Mobile: edge-to-edge. Tablet: centred 600px column. Desktop: see `desktop`.
  */
-export function Screen({ children, tone = 'ink', padded = true, desktop = 'card', className }: ScreenProps) {
+export function Screen({
+  children,
+  tone = 'ink',
+  padded = true,
+  desktop = 'card',
+  splitAlign = 'center',
+  className,
+}: ScreenProps) {
   const background = tone === 'surface' ? 'bg-surface' : 'bg-ink'
 
   if (desktop === 'bleed') {
@@ -37,10 +51,16 @@ export function Screen({ children, tone = 'ink', padded = true, desktop = 'card'
   }
 
   if (desktop === 'split') {
+    const alignTop = splitAlign === 'top'
     return (
-      <div className="flex min-h-[100svh] flex-col bg-black lg:flex-row">
+      <div className={cn('flex min-h-[100svh] flex-col bg-black lg:flex-row', alignTop && 'lg:h-[100svh]')}>
         <BrandPanel className="hidden lg:flex lg:w-[44%] xl:w-1/2" />
-        <div className="flex min-h-[100svh] w-full justify-center lg:min-h-0 lg:flex-1 lg:items-center lg:py-10">
+        <div
+          className={cn(
+            'flex min-h-[100svh] w-full justify-center lg:min-h-0 lg:flex-1',
+            alignTop ? 'lg:h-[100svh] lg:items-start lg:overflow-y-auto' : 'lg:items-center lg:py-10',
+          )}
+        >
           <div
             className={cn(
               'relative flex min-h-[100svh] w-full flex-col md:max-w-[600px] lg:min-h-0 lg:max-w-[440px]',

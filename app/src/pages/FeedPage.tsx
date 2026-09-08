@@ -21,7 +21,7 @@ export function FeedPage() {
   const [isGateOpen, setIsGateOpen] = useState(false)
 
   return (
-    <Screen tone="surface" padded={false}>
+    <Screen tone="surface" padded={false} desktop="split" splitAlign="top">
       <div className="flex flex-1 flex-col gap-4 px-4 pt-8 pb-8">
         <FeedHeader unreadCount={isAuthenticated ? 3 : 0} />
 
