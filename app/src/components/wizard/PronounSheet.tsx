@@ -68,7 +68,7 @@ function PronounPicker({ initial, onConfirm }: Omit<PronounSheetProps, 'open' | 
         <button
           type="button"
           onClick={() => setIsCustomOpen(true)}
-          className="w-fit text-[15px] text-fg underline-offset-4 hover:underline"
+          className="w-fit cursor-pointer text-[15px] text-fg underline-offset-4 hover:underline"
         >
           Did we miss anything?
         </button>

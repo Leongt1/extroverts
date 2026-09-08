@@ -19,12 +19,12 @@ export function TermsPage() {
   const [isTermsOpen, setIsTermsOpen] = useState(false)
 
   return (
-    <Screen>
+    <Screen desktop="split">
       <Wordmark />
 
       <p className="mt-16 text-[15px] leading-[1.6] font-bold tracking-[0.01em] uppercase md:mt-20 md:text-[17px]">
         By using this app, you&apos;re agreeing to keep things fun, safe, and respectful... and also
-        agreeing to our terms and conditions. Politeness is a must—treat others how you&apos;d want
+        agreeing to our terms and conditions. Politeness is a must. Treat others how you&apos;d want
         to be treated. Everyone here is looking for reasons to <span className="text-accent">party</span>,
         so bring your best vibe and expect the same from others. Let&apos;s party responsibly and make
         every experience a great one!
@@ -36,7 +36,7 @@ export function TermsPage() {
           <button
             type="button"
             onClick={() => setIsTermsOpen(true)}
-            className="text-fg underline-offset-4 hover:underline"
+            className="cursor-pointer text-fg underline-offset-4 hover:underline"
           >
             Terms and Conditions
           </button>

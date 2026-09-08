@@ -10,7 +10,7 @@ export function WizardScreen({ children, className }: { children: ReactNode; cla
   const direction = (state as { direction?: StepDirection } | null)?.direction ?? 'forward'
 
   return (
-    <Screen className={className}>
+    <Screen desktop="split" className={className}>
       <div
         key={pathname}
         className={cn(
