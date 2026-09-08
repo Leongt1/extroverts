@@ -1,0 +1,5 @@
+# This repo tracks only the app/ folder. The items below are local working
+# materials (reference screenshots, specs, agent notes) kept out of git.
+/docs/
+/ui_flow_images/
+/AGENTS.md
