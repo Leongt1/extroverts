@@ -21,23 +21,42 @@ export function FeedPage() {
   const [isGateOpen, setIsGateOpen] = useState(false)
 
   return (
-    <Screen tone="surface" padded={false} desktop="split" splitAlign="top">
-      <div className="flex flex-1 flex-col gap-4 px-4 pt-8 pb-8">
-        <FeedHeader unreadCount={isAuthenticated ? 3 : 0} />
+    <Screen tone="surface" padded={false} desktop="bleed">
+      {/* Top bar: inline on mobile (reference), a full-bleed sticky nav on desktop. */}
+      <div className="pt-8 md:pt-10 lg:sticky lg:top-0 lg:z-20 lg:border-b lg:border-line-soft/60 lg:bg-surface/90 lg:pt-0 lg:backdrop-blur">
+        <div className="mx-auto w-full px-4 pb-4 md:max-w-[640px] lg:max-w-[1000px] lg:px-8 lg:py-4">
+          <FeedHeader unreadCount={isAuthenticated ? 3 : 0} />
+        </div>
+      </div>
 
-        <ClubCard
-          tier={isAuthenticated ? 'bronze' : 'silver'}
-          progress={isAuthenticated ? 0 : 0.68}
-          tokens={isAuthenticated ? 0 : 160}
-        />
+      {/* Feed body: one column on mobile/tablet, feed + sticky sidebar on desktop. */}
+      <div className="mx-auto grid w-full gap-4 px-4 pb-8 md:max-w-[640px] lg:max-w-[1000px] lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:px-8 lg:pt-8 lg:pb-12">
+        {/* Club card: kept first for the mobile order; moves to the right rail on desktop. */}
+        <div className="lg:col-start-2 lg:row-start-1">
+          <div className="lg:sticky lg:top-24">
+            <ClubCard
+              tier={isAuthenticated ? 'bronze' : 'silver'}
+              progress={isAuthenticated ? 0 : 0.68}
+              tokens={isAuthenticated ? 0 : 160}
+            />
+          </div>
+        </div>
 
-        <EventCard
-          event={SAMPLE_EVENT}
-          isAuthenticated={isAuthenticated}
-          onJoin={() => !isAuthenticated && setIsGateOpen(true)}
-        />
+        {/* Main feed column. */}
+        <div className="lg:col-start-1 lg:row-start-1">
+          <EventCard
+            event={SAMPLE_EVENT}
+            isAuthenticated={isAuthenticated}
+            onJoin={() => !isAuthenticated && setIsGateOpen(true)}
+          />
+        </div>
 
-        {isAuthenticated && <BottomNav />}
+        {/* Bottom nav is a mobile idiom, so it stays off the desktop layout. */}
+        {isAuthenticated && (
+          <div className="lg:hidden">
+            <BottomNav />
+          </div>
+        )}
       </div>
 
       <AccountGateSheet
