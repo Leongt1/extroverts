@@ -74,7 +74,7 @@ export function VerifyPage() {
             type="button"
             onClick={() => resend.mutate(email)}
             disabled={isCoolingDown || resend.isPending}
-            className="ml-auto text-[15px] text-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:text-muted/70"
+            className="ml-auto cursor-pointer text-[15px] text-muted transition-colors hover:text-fg disabled:cursor-not-allowed disabled:text-muted/70"
           >
             {isCoolingDown ? `Resend OTP in ${secondsLeft}s` : 'Resend OTP'}
           </button>

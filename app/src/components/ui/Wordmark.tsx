@@ -22,7 +22,7 @@ export function Wordmark({ size = 'sm', className }: WordmarkProps) {
       <span aria-hidden="true">E</span>
       <span
         aria-hidden="true"
-        className="absolute top-[0.04em] -right-[0.18em] block size-[0.18em] rounded-full bg-current"
+        className="absolute top-[0.15em] right-[-0.28em] block size-[0.22em] rounded-full bg-current"
       />
     </span>
   )

@@ -110,7 +110,7 @@ export function SelectField({
         aria-describedby={message ? messageId : undefined}
         className={cn(
           CONTROL_BASE,
-          'flex items-center text-left',
+          'flex cursor-pointer items-center text-left',
           value ? 'text-fg' : 'text-placeholder uppercase',
           tone === 'error' ? 'border-danger' : 'border-line hover:border-line-strong',
           className,

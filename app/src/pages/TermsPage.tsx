@@ -36,7 +36,7 @@ export function TermsPage() {
           <button
             type="button"
             onClick={() => setIsTermsOpen(true)}
-            className="text-fg underline-offset-4 hover:underline"
+            className="cursor-pointer text-fg underline-offset-4 hover:underline"
           >
             Terms and Conditions
           </button>

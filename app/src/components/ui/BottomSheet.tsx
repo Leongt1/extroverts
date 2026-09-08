@@ -72,7 +72,7 @@ export function BottomSheet({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div
-        className="animate-fade-in absolute inset-0 bg-black/75"
+        className={cn('animate-fade-in absolute inset-0 bg-black/75', dismissOnScrim && 'cursor-pointer')}
         onClick={dismissOnScrim ? onClose : undefined}
         aria-hidden="true"
       />
@@ -100,7 +100,7 @@ export function BottomSheet({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="-mr-1 grid size-9 shrink-0 place-items-center rounded-full text-fg/80 hover:text-fg"
+            className="-mr-1 grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-fg/80 transition-colors hover:text-fg"
           >
             <CloseIcon />
           </button>
